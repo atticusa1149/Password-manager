@@ -2,14 +2,12 @@ import csv
 import hashlib
 from cryptography.fernet import Fernet
 
-def verify_master_password():
+def verify_master_password(attempt):
     with open("master.hash", "r") as f:
-        saved_hash = f.read().strip()
+        saved = f.read().strip()
 
-    attempt = input("Enter master password: ")
     attempt_hash = hashlib.sha256(attempt.encode()).hexdigest()
-
-    return attempt_hash == saved_hash
+    return attempt_hash == saved
 
 
 
@@ -29,13 +27,22 @@ def load_passwords():
 
 
 def add_password(website, username, password, fernet):
+    passwords = load_passwords()
+
+    # Check if website already exists
+    for row in passwords:
+        if row["website"].lower() == website.lower():
+            return False  # Duplicate found
+
+    # Encrypt password
     encrypted = fernet.encrypt(password.encode()).decode()
 
-    with open("Vault.csv", "a", newline="") as file:
-        writer = csv.writer(file)
+    # Save new entry
+    with open("Vault.csv", "a", newline="") as f:
+        writer = csv.writer(f)
         writer.writerow([website, username, encrypted])
 
-    print("Password saved.")
+    return True  # Successfully added
 
 
 def find_password(website, fernet):
@@ -62,6 +69,7 @@ def delete_password(website):
             writer.writerow([p["website"], p["username"], p["password"]])
 
     print("Entry deleted (if it existed).")
+    return True
 
 
 
