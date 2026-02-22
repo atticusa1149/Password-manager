@@ -7,48 +7,75 @@ from functions import (
     delete_password
 )
 from cryptography.fernet import Fernet
-import tkinter as tk
+import customtkinter as ctk
 from tkinter import messagebox
-from tkinter import ttk
 
-def login_window():
-    root=tk.Tk()
-    root.title("Login")
-    ttk.Label(root,text="Master Password").pack()
-    entry=ttk.Entry(root)
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("blue")
+FONT_FAMILY="Segoe UI"
+def Label(parent, text="", font=None, **kwargs):
+    if font is None:
+        font = (FONT_FAMILY, 15)
+    return ctk.CTkLabel(parent, text=text, font=font, **kwargs)
+
+def Button(parent, text="", command=None, **kwargs):
+    return ctk.CTkButton(parent, text=text, command=command, font=(FONT_FAMILY, 15), **kwargs)
+
+def Entry(parent, **kwargs):
+    return ctk.CTkEntry(parent, font=(FONT_FAMILY, 15), **kwargs)
+
+
+
+def login_window(root):
+    login = ctk.CTkToplevel()
+    login.title("Login")
+    login.geometry("350x250")
+    login.lift()
+    login.focus_force()
+    login.grab_set()
+
+    Label(login, text="Master Password").pack()
+    entry = Entry(login, show="*")
     entry.pack()
+
     def attempt():
         if verify_master_password(entry.get()):
-            key=load_key()
-            fernet=Fernet(key)
-            root.destroy()
-            main_window(fernet)
-        else:
-            messagebox.showerror("Error: incorrect password")
-    ttk.Button(root,text="Unlock Vault",command=attempt).pack(pady=5)
-    root.mainloop()
+            key = load_key()
+            fernet = Fernet(key)
 
-def main_window(fernet):
-    win=tk.Tk()
+            login.destroy()      # close login window
+            root.deiconify()     # show main window
+            main_window(fernet, root)
+        else:
+            messagebox.showerror("Error", "Incorrect password")
+
+    Button(login, text="Unlock Vault", command=attempt).pack(pady=5)
+
+def main_window(fernet,root):
+    win=root
     win.title("Password Manager")
-    ttk.Label(win,text="Password Manager Main Menu",font=("Segoe UI",20)).pack()
-    ttk.Button(win,text="Add password",width=20,command=lambda:add_window(fernet)).pack(pady=5)
-    ttk.Button(win,text="Find password",width=20,command=lambda:find_window(fernet)).pack(pady=5)
-    ttk.Button(win,text="Delete password",width=20,command=lambda:delete_window(fernet)).pack(pady=5)
-    ttk.Button(win,text="Exit app",width=20,command=win.destroy).pack(pady=5)
+    Label(win,text="Password Manager Main Menu",font=("Inter",20)).pack()
+    Button(win,text="Add password",width=170,command=lambda:add_window(fernet)).pack(pady=5)
+    Button(win,text="Find password",width=170,command=lambda:find_window(fernet)).pack(pady=5)
+    Button(win,text="Delete password",width=170,command=lambda:delete_window(fernet)).pack(pady=5)
+    Button(win,text="Exit app",width=170,command=win.destroy).pack(pady=5)
 
 def add_window(fernet):
-    win=tk.Toplevel()
+    win=ctk.CTkToplevel()
     win.title("Password Manager: add password")
-    ttk.Label(win,text="Add Entry",font=("Segoe UI",20)).pack()
-    ttk.Label(win,text="Enter the site's name:").pack(pady=5)
-    site_entry=ttk.Entry(win)
+    win.lift()
+    win.focus_force()
+    win.grab_set()
+
+    Label(win,text="Add Entry",font=("Inter",20)).pack()
+    Label(win,text="Enter the site's name:").pack(pady=5)
+    site_entry=Entry(win)
     site_entry.pack()
-    ttk.Label(win,text="Enter the username of the site: ").pack(pady=5)
-    user_entry=ttk.Entry(win)
+    Label(win,text="Enter the username of the site: ").pack(pady=5)
+    user_entry=Entry(win)
     user_entry.pack()
-    ttk.Label(win,text="Enter the password of the site: ").pack(pady=5)
-    password_entry=ttk.Entry(win)
+    Label(win,text="Enter the password of the site: ").pack(pady=5)
+    password_entry=Entry(win)
     password_entry.pack()
     def submit():
         success=add_password(
@@ -62,14 +89,16 @@ def add_window(fernet):
             win.destroy()
         else:
             messagebox.showerror("Error","A password for this site already exists, please delete it first")
-    ttk.Button(win,text="Submit",width=20,command=submit).pack(pady=5)
+    Button(win,text="Submit",width=170,command=submit).pack(pady=5)
 def find_window(fernet):
-    win = tk.Toplevel()
+    win = ctk.CTkToplevel()
     win.title("Password Vault: Find Password")
-
-    ttk.Label(win, text="Search for Password",font=("Segoe UI",20)).pack(pady=5)
-    ttk.Label(win, text="Enter website: ").pack(pady=5)
-    site_entry = ttk.Entry(win)
+    win.lift()
+    win.focus_force()
+    win.grab_set()
+    Label(win, text="Search for Password",font=("Inter",20)).pack(pady=5)
+    Label(win, text="Enter website: ").pack(pady=5)
+    site_entry = Entry(win)
     site_entry.pack(pady=5)
 
     def search():
@@ -88,15 +117,18 @@ def find_window(fernet):
             f"Password: {result['password']}"
         )
 
-    ttk.Button(win, text="Search", command=search).pack(pady=10)
+    Button(win, text="Search", command=search).pack(pady=10)
 
 
 def delete_window(fernet):
-    win = tk.Toplevel()
+    win.lift()
+    win.focus_force()
+    win.grab_set()
+    win = ctk.CTkToplevel()
     win.title("Delete Password")
 
-    ttk.Label(win, text="Website",font=("Segoe UI",20)).pack(pady=5)
-    site_entry = ttk.Entry(win)
+    Label(win, text="Website",font=("Inter",20)).pack(pady=5)
+    site_entry = Entry(win)
     site_entry.pack(pady=5)
 
     def submit():
@@ -109,7 +141,10 @@ def delete_window(fernet):
         else:
             messagebox.showerror("Error", f"No password found for '{website}'.")
 
-    ttk.Button(win, text="Delete", command=submit).pack(pady=10)
+    Button(win, text="Delete", command=submit).pack(pady=10)
 
-login_window()
+root = ctk.CTk()
+root.withdraw()
+login_window(root)       # pass root into login window
+root.mainloop()          # only ONE mainloop
 
