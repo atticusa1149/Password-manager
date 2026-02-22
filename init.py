@@ -12,5 +12,5 @@ def set_master_password(password):
     with open("master.hash", "w") as f:
         f.write(hashed)
 
-#generate_key()
-#set_master_password("helloworld67")
+generate_key()
+set_master_password(input("What do you want your master password to be: "))
