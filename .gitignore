@@ -3,3 +3,4 @@ master.hash
 __pycache__/
 *.pyc
 *.pyo
+Vault.csv
