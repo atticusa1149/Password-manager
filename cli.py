@@ -12,7 +12,8 @@ def main():
     print("=== Password Manager ===")
 
     # Require master password
-    if not verify_master_password():
+    attempt=input("Enter the master password: ")
+    if not verify_master_password(attempt):
         print("Incorrect master password.")
         return
 
