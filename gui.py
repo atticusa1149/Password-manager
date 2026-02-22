@@ -28,6 +28,7 @@ def Entry(parent, **kwargs):
 
 def login_window(root):
     login = ctk.CTkToplevel()
+    login.iconbitmap("icon.ico")
     login.title("Login")
     login.geometry("350x250")
     login.lift()
@@ -63,6 +64,7 @@ def main_window(fernet,root):
 def add_window(fernet):
     win=ctk.CTkToplevel()
     win.title("Password Manager: add password")
+    win.iconbitmap("icon.ico")
     win.lift()
     win.focus_force()
     win.grab_set()
@@ -93,6 +95,7 @@ def add_window(fernet):
 def find_window(fernet):
     win = ctk.CTkToplevel()
     win.title("Password Vault: Find Password")
+    win.iconbitmap("icon.ico")
     win.lift()
     win.focus_force()
     win.grab_set()
@@ -121,11 +124,12 @@ def find_window(fernet):
 
 
 def delete_window(fernet):
+    win = ctk.CTkToplevel()
     win.lift()
     win.focus_force()
     win.grab_set()
-    win = ctk.CTkToplevel()
     win.title("Delete Password")
+    win.iconbitmap("icon.ico")
 
     Label(win, text="Website",font=("Inter",20)).pack(pady=5)
     site_entry = Entry(win)
@@ -144,7 +148,7 @@ def delete_window(fernet):
     Button(win, text="Delete", command=submit).pack(pady=10)
 
 root = ctk.CTk()
+root.iconbitmap("icon.ico")
 root.withdraw()
 login_window(root)       # pass root into login window
 root.mainloop()          # only ONE mainloop
-
