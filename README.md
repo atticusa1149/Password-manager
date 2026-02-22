@@ -33,7 +33,7 @@ A secure, modern password manager built with **Python**, **CustomTkinter**, and 
 ## 📦 Installation
 
 ### 1. Clone the repository
-git clone https://github.com/yourname/password-manager.git  
+git clone https://github.com/atticusa1149/password-manager.git  
 cd password-manager
 
 ### 2. Install dependencies
@@ -115,4 +115,4 @@ Pull requests are welcome. If you have ideas for improvements, feel free to open
 
 ## 📜 License
 
-MIT License — free to use, modify, and distribute.
+Custom — free to use, modify, and distribute but not sell. 
